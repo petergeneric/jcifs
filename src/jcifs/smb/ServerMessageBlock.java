@@ -154,6 +154,7 @@ abstract class ServerMessageBlock extends Response implements Request, SmbConsta
     static final byte SMB_COM_NT_TRANSACT        = (byte)0xA0;
     static final byte SMB_COM_NT_TRANSACT_SECONDARY = (byte)0xA1;
     static final byte SMB_COM_NT_CREATE_ANDX     = (byte)0xA2;
+    static final byte SMB_COM_NT_RENAME          = (byte)0xA5;
 
     /*
      * Some fields specify the offset from the beginning of the header. This
@@ -499,6 +500,9 @@ Hexdump.hexdump( System.err, src, srcIndex, maxLen < 128 ? maxLen + 8 : 128 );
                 break;
             case SMB_COM_NT_CREATE_ANDX:
                 c = "SMB_COM_NT_CREATE_ANDX";
+                break;
+            case SMB_COM_NT_RENAME:
+                c = "SMB_COM_NT_RENAME";
                 break;
             case SMB_COM_OPEN_ANDX:
                 c = "SMB_COM_OPEN_ANDX";

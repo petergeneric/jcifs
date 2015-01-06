@@ -2040,6 +2040,38 @@ if (this instanceof SmbNamedPipe) {
                 se.printStackTrace( log );
         }
     }
+    
+/**
+ * Attempts to create a hard link from this <code>SmbFile</code> to another filepath
+ * designated by the <code>SmbFile</code> argument.
+ *
+ * @param dest An <code>SmbFile</code> that represents the new pathname to try to hard link to
+ * @throws SmbException NullPointerException If the <code>dest</code> argument is <code>null</code>
+ */
+    public void linkTo (SmbFile dest) throws SmbException {
+        if( getUncPath0().length() == 1 || dest.getUncPath0().length() == 1 ) {
+            throw new SmbException( "Invalid operation for workgroups, servers, or shares" );
+        }
+
+        resolveDfs(null);
+        dest.resolveDfs(null);
+
+        if (!tree.equals(dest.tree)) {
+            throw new SmbException( "Invalid operation for workgroups, servers, or shares" );
+        }
+
+        if( log.level >= 3 )
+            log.println( "linkTo: " + unc + " -> " + dest.unc );
+
+        attrExpiration = sizeExpiration = 0;
+        dest.attrExpiration = 0;
+
+        /*
+         * NT_RENAME Request / Response
+         */
+
+        send( new SmbComNtRename(SmbComNtRename.SMB_NT_RENAME_SET_LINK_INFO, unc, dest.unc ), blank_resp() );
+    }
 
 /**
  * Changes the name of the file this <code>SmbFile</code> represents to the name
